@@ -45,7 +45,7 @@ class ProductManager {
         arrayProductos.push(nuevoProducto)
 
         //*una vez que agrego el nuevo producto al array, guardo el array al archivo
-        await this.guardarArchivo()
+        await this.guardarArchivo(arrayProductos)
     }
 
     async getProducts(){
@@ -59,10 +59,10 @@ class ProductManager {
 
         const producto = arrayProductos.find(item => item.id === id)
         if (!producto) {
-            return ("not found");
+            return "not found";
             
         }else{
-            return (producto);
+            return producto;
             
         }
     }
@@ -72,6 +72,7 @@ class ProductManager {
         try{
             await fs.writeFile(this.path, JSON.stringify(arrayProductos, null, 2))
         }catch(error) {
+            console.log(error.toString())
             console.log("error al guardar el archivo");
         }
     }
@@ -136,3 +137,4 @@ export default ProductManager
 // console.log("verifico: ");
 // manager.getProductById(2)
 // manager.getProductById(20)
+

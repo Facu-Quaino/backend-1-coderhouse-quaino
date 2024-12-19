@@ -24,11 +24,36 @@ router.get("/", async (req,res)=>{
     }
 })
 
-//! ruta para retornar todos los productos por id
-router.get("/products/:pid", async (req,res)=>{
-    let id = req.params.pid
+//! ruta para retornar un producto por id
+router.get("/:pid", async (req,res)=>{
+    let id = req.params.pid;
     const productoBuscado = await manager.getProductById(parseInt(id))
     res.send(productoBuscado)
+})
+
+//! ruta para agregar un nuevo producto
+router.post("/", async (req,res)=>{
+
+    const nuevoProducto = req.body
+
+    try {
+        await manager.addProduct(nuevoProducto)
+        res.json(nuevoProducto)
+    } catch (error) {
+        console.log(error.toString());
+        res.status(500).json({error: "error al agregar el producto"})
+    }
+    
+})
+
+//! ruta para modificar un producto
+router.put("/:pid", async (req,res)=>{
+    let id = req.params.pid;
+})
+
+//! ruta para eliminar un producto
+router.delete("/:pid", async (req,res)=>{
+
 })
 
 export default router

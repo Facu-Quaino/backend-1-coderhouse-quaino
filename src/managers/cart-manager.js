@@ -31,6 +31,8 @@ class CartManager{
 
     //! metodos que me piden las consignas
 
+    //! crear carrito
+
     async CrearCarrito(){
         const nuevoCarrito = {
             id: ++this.ultId,
@@ -44,6 +46,8 @@ class CartManager{
         await this.guardarCarritos()
         return nuevoCarrito
     }
+
+    //! obtener carrito por su id
 
     async getCarritoById(cartId){
         const carrito = this.carts.find(carro => carro.id === cartId)
