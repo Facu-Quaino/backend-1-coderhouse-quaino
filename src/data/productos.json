@@ -1,20 +1,29 @@
 [
   {
     "id": 1,
-    "title": "remera negra",
-    "description": "de algodon",
-    "price": 9.99,
-    "img": "https://example.com/images/remera-negra.jpg",
-    "code": "TFC-64209",
-    "stock": 18
+    "title": "Camiseta Deportiva",
+    "description": "Camiseta ligera y transpirable para entrenamiento intenso. Perfecta para el gimnasio o deportes al aire libre.",
+    "price": 25.99,
+    "img": "https://example.com/images/camiseta-deportiva.jpg",
+    "code": "CAM-1234",
+    "stock": 50
   },
   {
     "id": 2,
-    "title": "buzo roja",
-    "description": "con friza",
-    "price": 9.99,
-    "img": "https://example.com/images/buzo-rojo.jpg",
-    "code": "BZR-23042",
-    "stock": 18
+    "title": "Zapatillas Running",
+    "description": "Zapatillas diseñadas para brindar comodidad y soporte en largas distancias. Ideal para runners de todos los niveles.",
+    "price": 79.99,
+    "img": "https://example.com/images/zapatillas-running.jpg",
+    "code": "ZAP-5678",
+    "stock": 30
+  },
+  {
+    "id": 3,
+    "title": "Reloj Inteligente",
+    "description": "Reloj inteligente con funciones de monitoreo de salud, GPS y notificaciones inteligentes. Resistente al agua.",
+    "price": 149.99,
+    "img": "https://example.com/images/reloj-inteligente.jpg",
+    "code": "REL-91011",
+    "stock": 20
   }
 ]

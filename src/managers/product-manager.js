@@ -5,6 +5,7 @@
 
 //*con ESmodules: 
 import {promises as fs} from "fs"
+import { title } from "process";
 
 class ProductManager {
     static ultimoId = 0

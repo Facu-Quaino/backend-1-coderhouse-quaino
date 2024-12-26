@@ -8,6 +8,7 @@ const router = Router()
 
 //*con ESmodules
 import ProductManager from "../managers/product-manager.js";
+import { pid } from "process";
 const manager = new ProductManager("./src/data/productos.json")
 
 //! ruta para listar todos los productos
@@ -48,7 +49,28 @@ router.post("/", async (req,res)=>{
 
 //! ruta para modificar un producto
 router.put("/:pid", async (req,res)=>{
-    let id = req.params.pid;
+    let id = req.params.pid
+    let {title, description, price} = req.body
+
+    try {
+        await manager.getProductById(parseInt(id))
+
+        if(producto !== -1){
+            arrayProductos[producto].title = title
+            arrayProductos[producto].description = description
+            arrayProductos[producto].price = price
+
+            console.log(producto);
+            res.send({status: "success", mensaje: "producto actualizado"})
+        } else{
+            res.status(404).send({status: "error", mensaje: "producto no encontrado"})
+        }
+    } catch (error) {
+        console.log(error.toString());
+        res.status(500).json({error: "error al modificar el producto"})
+    }
+
+
 })
 
 //! ruta para eliminar un producto
