@@ -1,14 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "Camiseta Deportiva",
-    "description": "Camiseta ligera y transpirable para entrenamiento intenso. Perfecta para el gimnasio o deportes al aire libre.",
-    "price": 25.99,
-    "img": "https://example.com/images/camiseta-deportiva.jpg",
-    "code": "CAM-1234",
-    "stock": 50
-  },
-  {
     "id": 2,
     "title": "Zapatillas Running",
     "description": "Zapatillas diseñadas para brindar comodidad y soporte en largas distancias. Ideal para runners de todos los niveles.",
@@ -25,5 +16,14 @@
     "img": "https://example.com/images/reloj-inteligente.jpg",
     "code": "REL-91011",
     "stock": 20
+  },
+  {
+    "id": 5,
+    "title": "Botellas de Agua Reutilizables",
+    "description": "Botellas de acero inoxidable, perfectas para mantener la temperatura de tus bebidas por más tiempo.",
+    "price": 15.99,
+    "img": "https://example.com/images/botellas-agua.jpg",
+    "code": "BOT-67890",
+    "stock": 100
   }
 ]

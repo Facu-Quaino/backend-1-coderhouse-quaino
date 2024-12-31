@@ -5,7 +5,6 @@
 
 //*con ESmodules: 
 import {promises as fs} from "fs"
-import { title } from "process";
 
 class ProductManager {
     static ultimoId = 0
@@ -13,6 +12,8 @@ class ProductManager {
         this.products = [];
         this.path = path
     }
+
+//! agregar producto
 
     async addProduct({title, description, price, img, code, stock}){
 
@@ -49,10 +50,14 @@ class ProductManager {
         await this.guardarArchivo(arrayProductos)
     }
 
+    //! obtener productos
+
     async getProducts(){
         const arrayProductos = await this.leerArchivo()
         return arrayProductos
     }
+
+    //!obtener un producto por su id
 
     async getProductById(id){
         //*primero leo el archivo y genero el array
@@ -68,7 +73,49 @@ class ProductManager {
         }
     }
 
-    //*puedo armar metodos auxiliares que guarden el archivo y recupere los datos (opcional)
+    //!modificar un producto por su id
+
+    async UpdateProductById(id , nuevoProducto ){
+        const arrayProductos = await this.leerArchivo()
+
+        const producto = arrayProductos.find(item => item.id === id)
+        
+        if (!producto) {
+            return null;
+            
+        }else{
+            producto.title = nuevoProducto.title
+            producto.description = nuevoProducto.description
+            producto.price = nuevoProducto.price
+            producto.img = nuevoProducto.img
+            producto.code = nuevoProducto.code
+            producto.stock = nuevoProducto.stock
+        }
+
+        await this.guardarArchivo(arrayProductos)
+    }
+
+    //! borrar un producto por su id
+    async deleteProductById(id){
+        const arrayProductos = await this.leerArchivo()
+
+        const productoIndex = arrayProductos.findIndex(item => item.id === id)
+
+        if(productoIndex != -1){
+            arrayProductos.splice(productoIndex, 1)
+            
+        }else{
+            return null
+        }
+
+        await this.guardarArchivo(arrayProductos)
+        return arrayProductos
+    }
+
+    //! puedo armar metodos auxiliares que guarden el archivo y recupere los datos (opcional)
+
+    //! guardar los datos
+
     async guardarArchivo(arrayProductos){
         try{
             await fs.writeFile(this.path, JSON.stringify(arrayProductos, null, 2))
@@ -77,6 +124,8 @@ class ProductManager {
             console.log("error al guardar el archivo");
         }
     }
+
+    //! recuperar los datos
 
     async leerArchivo(){
         try{
@@ -94,48 +143,3 @@ class ProductManager {
 
 //*con ESmodules
 export default ProductManager
-
-//!testing
-
-//*creo una instancia de product manager
-
-// const manager = new ProductManager()
-
-//*llamo get products luego de crear la instancia, debe devolver un array vacio
-
-// console.log(manager.getProducts());
-
-//*llamo add product con los campos
-
-// title: “producto prueba”
-// description:”Este es un producto prueba”
-// price:200,
-// thumbnail:”Sin imagen”
-// code:”abc123”,
-// stock:25
-
-// manager.addProduct("producto prueba", "este es un producto prueba", 200, "sin imagen", "abc123", 25)
-
-//*llamo a get products de nuevo, debe aparecer el producto prueba
-
-// console.log(manager.getProducts());
-
-//*agrego varios mas oara ver el incremento de id
-
-// manager.addProduct("producto test", "este es un producto test", 150, "sin imagen", "abc124", 15)
-// manager.addProduct("producto evaluacion", "este es un producto evaluacion", 300, "sin imagen", "abc125", 20)
-// manager.addProduct("producto desafio", "este es un producto desafio", 250, "sin imagen", "abc126", 30)
-
-//*llamo a get products de nuevo, deben aparecer todos los productos con id 1, 2, 3, 4
-
-// console.log(manager.getProducts());
-
-//* si dejo un campo en blanco no se carga el producto que contenga el campo sin llenar porque no pasa la primer evaluacion
-//* si pongo el mismo codigo en dos productos no se carga el segundo producto con el mismo codigo porque no pasa la segunda evaluacion
-
-//*evaluo get product by id, si no encuentra el id que tire error, si lo encuentra que tire el producto
-
-// console.log("verifico: ");
-// manager.getProductById(2)
-// manager.getProductById(20)
-

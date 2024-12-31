@@ -8,7 +8,6 @@ const router = Router()
 
 //*con ESmodules
 import ProductManager from "../managers/product-manager.js";
-import { pid } from "process";
 const manager = new ProductManager("./src/data/productos.json")
 
 //! ruta para listar todos los productos
@@ -49,19 +48,14 @@ router.post("/", async (req,res)=>{
 
 //! ruta para modificar un producto
 router.put("/:pid", async (req,res)=>{
+
     let id = req.params.pid
-    let {title, description, price} = req.body
+    let nuevoProducto = req.body
 
     try {
-        await manager.getProductById(parseInt(id))
-
-        if(producto !== -1){
-            arrayProductos[producto].title = title
-            arrayProductos[producto].description = description
-            arrayProductos[producto].price = price
-
-            console.log(producto);
-            res.send({status: "success", mensaje: "producto actualizado"})
+        const updateProduct = await manager.UpdateProductById(parseInt(id), nuevoProducto)
+        if (updateProduct) {
+            res.json(nuevoProducto)
         } else{
             res.status(404).send({status: "error", mensaje: "producto no encontrado"})
         }
@@ -69,13 +63,24 @@ router.put("/:pid", async (req,res)=>{
         console.log(error.toString());
         res.status(500).json({error: "error al modificar el producto"})
     }
-
-
 })
 
 //! ruta para eliminar un producto
 router.delete("/:pid", async (req,res)=>{
+    let id = req.params.pid
 
+    try {
+        const productDelete = await manager.deleteProductById(parseInt(id))
+        if (productDelete) {
+            res.send({status: "success", mensaje: "producto eliminado"});
+        }else{
+            res.status(404).json({error: "error al encontrar el producto"})
+        }
+        
+    } catch (error) {
+        console.log(error.toString());
+        res.status(500).json({error: "error al eliminar el producto"});
+    }
 })
 
 export default router
