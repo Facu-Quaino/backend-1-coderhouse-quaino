@@ -1,3 +1,110 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins", sans-serif;
+}
+
+a{
+    text-decoration: none;
+}
+
 body{
-    background-color: grey;
+    background-color: black;
+}
+
+h1{
+    color: white;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+
+/* products */
+
+.cards-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card{
+    color: white;
+    text-align: center;
+    border: 1px solid white;
+    border-radius: 10%;
+    padding: 10px;
+    margin: 20px;
+}
+
+.img{
+    width: 150px;
+    border-radius: 10%;
+}
+
+.details{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.details h3{
+    padding-bottom: 3px;
+}
+
+.details p{
+    padding-bottom: 3px;
+}
+
+.card button{
+    padding: 5px;
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    border-radius: 10%;
+}
+
+.card button:hover{
+    background-color: white;
+    color: black;
+    border: 1px solid white;
+}
+
+.card button:active{
+    background-color: yellow;
+    color: black;
+    border: 1px solid yellow;
+}
+
+.paginacion{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 50px;
+}
+
+.paginacion a{
+    padding: 5px;
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    border-radius: 10%;
+}
+
+.paginacion a:hover{
+    background-color: white;
+    color: black;
+    border: 1px solid white;
+}
+
+.paginacion a:active{
+    background-color: yellow;
+    color: black;
+    border: 1px solid yellow;
+}
+
+.paginacion p{
+    color: white;
+    margin-left: 20px;
+    margin-right: 20px;
 }

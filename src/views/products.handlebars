@@ -1,0 +1,45 @@
+<h1>Listado de productos</h1>
+
+    <div class = "cards-container">
+        {{#each productos}}
+            <div class="card">
+                <img src={{this.img}} alt={{this.title}} class="img">
+
+                <div class="details">
+                    <h3>
+                        {{this.title}}
+                    </h3>
+
+                    <p>
+                        {{this.description}}
+                    </p>
+
+                    <p>
+                        ${{this.price}}
+                    </p>
+
+                    <p>
+                        {{this.category}}
+                    </p>
+                </div>
+
+                <button class="boton-agregar">
+                    Agregar
+                </button>
+            </div>
+        {{/each}}
+    </div>
+
+<div class="paginacion">
+    {{#if hasPrevPage}}
+        <a href="/products?page={{prevPage}}">Anterior</a>
+    {{/if}}
+    
+    <p>
+        {{currentPage}} / {{totalPages}}
+    </p>
+
+    {{#if hasNextPage}}
+        <a href="/products?page={{nextPage}}">Siguiente</a>
+    {{/if}}
+</div>

@@ -1,29 +1,101 @@
-[
-  {
-    "id": 2,
-    "title": "Zapatillas Running",
-    "description": "Zapatillas diseñadas para brindar comodidad y soporte en largas distancias. Ideal para runners de todos los niveles.",
-    "price": 79.99,
-    "img": "https://example.com/images/zapatillas-running.jpg",
-    "code": "ZAP-5678",
-    "stock": 30
-  },
-  {
-    "id": 3,
-    "title": "Reloj Inteligente",
-    "description": "Reloj inteligente con funciones de monitoreo de salud, GPS y notificaciones inteligentes. Resistente al agua.",
-    "price": 149.99,
-    "img": "https://example.com/images/reloj-inteligente.jpg",
-    "code": "REL-91011",
-    "stock": 20
-  },
-  {
-    "id": 5,
-    "title": "Botellas de Agua Reutilizables",
-    "description": "Botellas de acero inoxidable, perfectas para mantener la temperatura de tus bebidas por más tiempo.",
-    "price": 15.99,
-    "img": "https://example.com/images/botellas-agua.jpg",
-    "code": "BOT-67890",
-    "stock": 100
-  }
+[    
+    {
+    "title": "Buzo negro",
+    "description": "Urbano",
+    "price": 10000,
+    "img": "./img/buzo1.png",
+    "code": "ABC-111",
+    "stock": 100,
+    "category": "buzo",
+    "status": "en stock",
+    "thumbnails": []
+    },
+    {
+    "title": "Buzo azul",
+    "description": "Urbano",
+    "price": 10000,
+    "img": "./img/buzo2.png",
+    "code": "ABC-112",
+    "stock": 100,
+    "category": "buzo",
+    "status": "en stock",
+    "thumbnails": []
+    },
+    {
+    "title": "Buzo rojo",
+    "description": "Urbano",
+    "price": 10000,
+    "img": "./img/buzo3.png",
+    "code": "ABC-113",
+    "stock": 100,
+    "category": "buzo",
+    "status": "en stock",
+    "thumbnails": []
+    },
+    {
+    "title": "Camiseta roja",
+    "description": "Oversize",
+    "price": 4000,
+    "img": "./img/camiseta1.png",
+    "code": "ABC-121",
+    "stock": 100,
+    "category": "camiseta",
+    "status": "en stock",
+    "thumbnails": []
+    },
+    {
+    "title": "Camiseta purpura",
+    "description": "Oversize",
+    "price": 4000,
+    "img": "./img/camiseta2.png",
+    "code": "ABC-122",
+    "stock": 100,
+    "category": "camiseta",
+    "status": "en stock",
+    "thumbnails": []
+    },
+    {
+    "title": "Camiseta celeste",
+    "description": "Oversize",
+    "price": 4000,
+    "img": "./img/camiseta3.png",
+    "code": "ABC-123",
+    "stock": 100,
+    "category": "camiseta",
+    "status": "en stock",
+    "thumbnails": []
+    },
+    {
+    "title": "Pantalon jean azul",
+    "description": "Clasico",
+    "price": 7000,
+    "img": "./img/pantalon1.png",
+    "code": "ABC-131",
+    "stock": 100,
+    "category": "pantalon",
+    "status": "en stock",
+    "thumbnails": []
+    },
+    {
+    "title": "Pantalon cargo oliva",
+    "description": "Resistente",
+    "price": 7000,
+    "img": "./img/pantalon2.png",
+    "code": "ABC-132",
+    "stock": 100,
+    "category": "pantalon",
+    "status": "en stock",
+    "thumbnails": []
+    },
+    {
+    "title": "Pantalon cargo marron",
+    "description": "Util",
+    "price": 7000,
+    "img": "./img/pantalon3.png",
+    "code": "ABC-133",
+    "stock": 100,
+    "category": "pantalon",
+    "status": "en stock",
+    "thumbnails": []
+    }
 ]

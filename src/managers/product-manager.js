@@ -1,145 +1,142 @@
-//! actividad 2 - product manager
-
-//*con common js
-// const fs = require("fs").promises
-
-//*con ESmodules: 
-import {promises as fs} from "fs"
+import ProductModel from "../models/product.model.js";
 
 class ProductManager {
-    static ultimoId = 0
-    constructor(path) {
-        this.products = [];
-        this.path = path
-    }
 
-//! agregar producto
+    //! agregar producto
+    async addProduct({title, description, price, img, code, stock, category, thumbnails}){
+        try {
+            //*valido que se agregaron todos los campos
+            if (!title || !description || !price || !code || !stock || !category) {
+                console.log("Debe llenar todos los campos");
+                return
+            }
 
-    async addProduct({title, description, price, img, code, stock}){
+            //*valido que el code sea unico
+            const productoExistente = await ProductModel.findOne({code: code})
 
-        //*puedo leer el archivo y guardar el array con los productos
-        const arrayProductos = await this.leerArchivo()
+            if(productoExistente){
+                console.log("No pueden existir dos productos con el mismo codigo");
+                return
+            }
 
-        //*valido que se agregaron todos los campos
-        if (!title || !description || !price || !img || !code || !stock) {
-            console.log("debe llenar todos los campos");
-            return
+            //*una vez que paso las validaciones puedo crear un producto nuevo
+            const nuevoProducto = new ProductModel({
+                title,
+                description,
+                price,
+                img,
+                code,
+                stock,
+                category,
+                status: true,
+                thumbnails: thumbnails || []
+            })
+
+            await nuevoProducto.save()
+        } catch (error) {
+            console.log("Ha surgido un error al intentar agregar el producto", error);
+            throw error
         }
-
-        //*valido que el code sea unico
-        if (arrayProductos.some(item => item.code === code)) {
-            console.log("el codigo debe ser unico");
-            return
-        }
-
-        //*una vez que paso las validaciones puedo crear un objeto
-        const nuevoProducto = {
-            id: ++ProductManager.ultimoId,
-            title,
-            description,
-            price,
-            img,
-            code,
-            stock
-        }
-
-        //*una vez lo creo, lo pusheo al array
-        arrayProductos.push(nuevoProducto)
-
-        //*una vez que agrego el nuevo producto al array, guardo el array al archivo
-        await this.guardarArchivo(arrayProductos)
     }
 
     //! obtener productos
+    async getProducts({ limit = 10, page = 1, sort, query } = {}){
+        try {
+            const skip = (page - 1) * limit;
 
-    async getProducts(){
-        const arrayProductos = await this.leerArchivo()
-        return arrayProductos
+            let queryOptions = {};
+
+            if (query) {
+                queryOptions = { category: query };
+            }
+
+            const sortOptions = {};
+            if (sort) {
+                if (sort === 'asc' || sort === 'desc') {
+                    sortOptions.price = sort === 'asc' ? 1 : -1;
+                }
+            }
+
+            const productos = await ProductModel
+                .find(queryOptions)
+                .sort(sortOptions)
+                .skip(skip)
+                .limit(limit);
+
+            const totalProducts = await ProductModel.countDocuments(queryOptions);
+
+            const totalPages = Math.ceil(totalProducts / limit);
+            const hasPrevPage = page > 1;
+            const hasNextPage = page < totalPages;
+
+            return {
+                docs: productos,
+                totalPages,
+                prevPage: hasPrevPage ? page - 1 : null,
+                nextPage: hasNextPage ? page + 1 : null,
+                page,
+                hasPrevPage,
+                hasNextPage,
+                prevLink: hasPrevPage ? `/api/products?limit=${limit}&page=${page - 1}&sort=${sort}&query=${query}` : null,
+                nextLink: hasNextPage ? `/api/products?limit=${limit}&page=${page + 1}&sort=${sort}&query=${query}` : null,
+            };
+        } catch (error) {
+            console.log("Error al obtener los productos", error);
+            throw error;
+        }
     }
 
     //!obtener un producto por su id
-
     async getProductById(id){
-        //*primero leo el archivo y genero el array
-        const arrayProductos = await this.leerArchivo()
+        try {
+            const producto = await ProductModel.findById(id)
 
-        const producto = arrayProductos.find(item => item.id === id)
-        if (!producto) {
-            return "not found";
+            if (!producto) {
+                console.log("no se ha encontrado el producto");
+                return null
+            }
+
+            console.log("Se ha encontrado el producto");
+            return producto
             
-        }else{
-            return producto;
-            
+        } catch (error) {
+            console.log("No se ha logrado obtener el producto", error);
+            throw error;
         }
     }
 
     //!modificar un producto por su id
+    async UpdateProductById(id , actualizado){
+        try {
+            const encontrarYActualizar = await ProductModel.findByIdAndUpdate(id, actualizado)
 
-    async UpdateProductById(id , nuevoProducto ){
-        const arrayProductos = await this.leerArchivo()
+            if (!encontrarYActualizar) {
+                console.log("el producto no ha sido encontrado");
+                return null
+            }
 
-        const producto = arrayProductos.find(item => item.id === id)
-        
-        if (!producto) {
-            return null;
-            
-        }else{
-            producto.title = nuevoProducto.title
-            producto.description = nuevoProducto.description
-            producto.price = nuevoProducto.price
-            producto.img = nuevoProducto.img
-            producto.code = nuevoProducto.code
-            producto.stock = nuevoProducto.stock
+            console.log("el producto ha sido actualizado con exito")
+            return encontrarYActualizar
+        } catch (error) {
+            console.log("error al actualizar el producto", error);
+            throw error
         }
-
-        await this.guardarArchivo(arrayProductos)
     }
 
     //! borrar un producto por su id
     async deleteProductById(id){
-        const arrayProductos = await this.leerArchivo()
+        try {
+            const encontrarYBorrar = await ProductModel.findByIdAndDelete(id)
 
-        const productoIndex = arrayProductos.findIndex(item => item.id === id)
-
-        if(productoIndex != -1){
-            arrayProductos.splice(productoIndex, 1)
-            
-        }else{
-            return null
-        }
-
-        await this.guardarArchivo(arrayProductos)
-        return arrayProductos
-    }
-
-    //! puedo armar metodos auxiliares que guarden el archivo y recupere los datos (opcional)
-
-    //! guardar los datos
-
-    async guardarArchivo(arrayProductos){
-        try{
-            await fs.writeFile(this.path, JSON.stringify(arrayProductos, null, 2))
-        }catch(error) {
-            console.log(error.toString())
-            console.log("error al guardar el archivo");
-        }
-    }
-
-    //! recuperar los datos
-
-    async leerArchivo(){
-        try{
-            const respuesta = await fs.readFile(this.path, "utf-8")
-            const arrayProductos = JSON.parse(respuesta)
-            return arrayProductos
-        }catch(error) {
-            console.log("error al intentar leer el archivo");
+            if (!encontrarYBorrar) {
+                console.log("no se encuentra el producto");
+                return null
+            }
+        } catch (error) {
+            console.log("error al intentar borrar el producto", error);
+            throw error
         }
     }
 }
 
-//*con common js
-// module.exports = ProductManager;
-
-//*con ESmodules
 export default ProductManager

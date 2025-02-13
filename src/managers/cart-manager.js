@@ -1,81 +1,127 @@
-import {promises as fs} from "fs"
+import CartModel from "../models/cart.model.js"
 
 class CartManager{
-    constructor(path){
-        this.carts = []
-        this.path = path
-        this.ultId = 0
-
-        //*cargo los carritos almacenados en el archivo
-        this.cargarCarritos()
-    }
-
-    async cargarCarritos(){
-        try {
-            const data = await fs.readFile(this.path, "utf-8")
-            this.carts = JSON.parse(data)
-            if (this.carts.length > 0) {
-                //*verifico si hay al menos un carrito creado
-                this.ultId = Math.max(...this.carts.map(cart => cart.id))
-                //* utilizo el metodo map para crear un nuevo array que solo obtenga los ids del carrito y con Math.max obtengo el mayor
-            }
-        } catch (error) {
-            //* si no existe el archivo, lo creo
-            await this.guardarCarritos()
-        }
-    }
-
-    async guardarCarritos(){
-        await fs.writeFile(this.path, JSON.stringify(this.carts, null, 2))
-    }
-
-    //! metodos que me piden las consignas
 
     //! crear carrito
+    async crearCarrito(){
+        try {
+            const nuevoCarrito = new CartModel({products: []})
 
-    async CrearCarrito(){
-        const nuevoCarrito = {
-            id: ++this.ultId,
-            products: []
+            await nuevoCarrito.save()
+            return nuevoCarrito
+        } catch (error) {
+            console.log("error al intentar crear el nuevo carrito", error)
+            throw error
         }
-
-        //*pusheo el nuevo carrito dentro del array de carritos
-        this.carts.push(nuevoCarrito)
-
-        //*guardo este array en el archivo
-        await this.guardarCarritos()
-        return nuevoCarrito
     }
 
     //! obtener carrito por su id
-
     async getCarritoById(cartId){
-        const carrito = this.carts.find(carro => carro.id === cartId)
+        try {
+            const carrito = await CartModel.findById(cartId)
 
-        if(!carrito){
-            throw new Error("no existe un carrito con ese ID")
+            if (!carrito) {
+                console.log("no se ha encontrado un carrito con este id");
+                return null
+            }
+
+            return carrito
+        } catch (error) {
+            console.log("ha ocurrido un error al intentar mostrar el carrito", error);
+            throw error
         }
-
-        return carrito
-        //*en vez de esto puedo usar un try catch
     }
 
-    async agregarProductoAlCarrito(cartId, productId, quantity = 1){
-        const carrito = await this.getCarritoById(cartId)
+    //! agregar un producto al carrito
+    async agregarUnProductoAlCarrito(cartId, productId, quantity = 1){
+        try {
+            const carrito = await this.getCarritoById(cartId)
+            const productoEnElCarrito = carrito.products.find(producto => producto.product.toString()===productId)
 
-        //*verifico si el producto ya existe en el carrito
-        const existeProducto = carrito.products.find(prod => prod.product === productId)
+            if (productoEnElCarrito) {
+                productoEnElCarrito.quantity += quantity
+            } else{
+                carrito.products.push({product: productId, quantity})
+            }
 
-        //*si el producto ya esta en el carrito, le aumento la cantidad
-        //*si no esta, lo pusheo
-        if (existeProducto) {
-            existeProducto.quantity++
-        } else{
-            carrito.products.push({product: productId, quantity})
+            carrito.markModified("products")
+
+            await carrito.save()
+            return carrito
+        } catch (error) {
+            console.log("error al intentar agregar un producto al carrito", error)
+            throw error
         }
+    }
 
-        await this.guardarCarritos(); 
-        return carrito; 
+    //! eliminar un producto del carrito
+    async eliminarUnProductoDelCarrito(cartId, productId){
+        try {
+            const carrito = await this.getCarritoById(cartId)
+
+            carrito.products = carrito.products.filter(producto => producto.product._id.toString() !== productId)
+
+            await carrito.save()
+            return carrito
+        } catch (error) {
+            console.log("error al intentar eliminar el producto del carrito", error);
+            throw error
+        }
+    }
+
+    //!actualizar el carrito
+    async actualizarElCarrito(cartId, updatedProducts){
+        try {
+            const carrito = await this.getCarritoById(cartId)
+
+            carrito.products = productosActualizados
+            carrito.markModified("products")
+
+            await carrito.save()
+        } catch (error) {
+            console.log("error al intentar actualizar el carrito", error);
+            throw error
+        }
+    }
+
+    //!actualizar la cantidad de productos
+    async actualizarLaCantidadDeProductos(cartId, productId, nuevaCantidad){
+        try {
+            const carrito = await this.getCarritoById(cartId)
+            
+            const indexProducto = carrito.products.findIndex(producto => producto.product._id.toString() === productId)
+
+            if (indexProducto !== -1) {
+                carrito.products[indexProducto].quantity = nuevaCantidad
+
+                carrito.markModified("products")
+
+                await carrito.save()
+                return carrito
+            } else {
+                console.log("error al intentar encontrar el producto dentro del carrito")
+            }
+        } catch (error) {
+            console.log("error al intentar actualizar la cantidad de este producto", error)
+            throw error
+        }
+    }
+
+    //!vaciar el carrito
+    async vaciarElCarrito(cartId){
+        try {
+            const carrito = await CartModel.findByIdAndUpdate(cartId, {products:[]}, {new:true})
+
+            if (!carrito) {
+                console.log("no se ha encontrado un carrito con este id");
+                return null
+            }
+    
+            return carrito
+        } catch (error) {
+            console.log("error al intentar vaciar el carrito", error);
+            throw error
+        }
     }
 }
 
